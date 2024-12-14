@@ -1,15 +1,17 @@
 package com.example.ecom.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name="class")
+@ToString(exclude = "classes")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Class {
@@ -19,7 +21,8 @@ public class Class {
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "classes")
+    @ManyToMany(mappedBy = "classes",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Student> students = new HashSet<>();
 
 }

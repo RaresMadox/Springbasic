@@ -8,6 +8,7 @@ import com.example.ecom.repository.StudentRepository;
 import com.example.ecom.repository.ClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.List;
@@ -48,14 +49,24 @@ public class StudentService {
     }
 
     // Add a class to a student
+    @Transactional
     public void addClassToStudent(Long studentId, Long classId) {
-        Optional<Student> student = studentRepository.findById(studentId);
-        Optional<Class> clazz = classRepository.findById(classId);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        Class clazz = classRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Class not found"));
 
-        if (student.isPresent() && clazz.isPresent()) {
-            student.get().getClasses().add(clazz.get());
-            studentRepository.save(student.get());
-        }
+        // Avoid ConcurrentModificationException
+        Set<Class> classes = new HashSet<>(student.getClasses());
+        classes.add(clazz); // Add the new class
+        student.setClasses(classes); // Update the student's classes
+
+        // Ensure bidirectional relationship is maintained
+        clazz.getStudents().add(student);
+
+        // Save changes
+        classRepository.save(clazz);
+        studentRepository.save(student);
     }
 
     // Get all classes a student is enrolled in
