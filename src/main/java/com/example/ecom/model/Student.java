@@ -1,20 +1,12 @@
 package com.example.ecom.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.hibernate.annotations.ManyToAny;
-
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,5 +30,5 @@ public class Student {
             joinColumns = @JoinColumn(name="student_id"),
             inverseJoinColumns = @JoinColumn(name="class_id")
     )
-    private Set<Class> classes = new HashSet<>();
+    private Set<ClassStudy> classStudies = new HashSet<>();
 }

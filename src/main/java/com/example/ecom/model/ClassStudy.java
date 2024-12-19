@@ -1,5 +1,4 @@
 package com.example.ecom.model;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,18 +10,23 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name="class")
-@ToString(exclude = "classes")
+@ToString(exclude = {"classStudies","classStudyJob"})
 @NoArgsConstructor
 @AllArgsConstructor
-public class Class {
+public class ClassStudy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "classes",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "classStudies",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Student> students = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "classStudyJob", cascade = CascadeType.ALL)
+    private Set<Teacher> teachers = new HashSet<>();
+
+
 
 }

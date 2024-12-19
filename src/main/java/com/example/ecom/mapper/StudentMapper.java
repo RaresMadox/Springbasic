@@ -10,7 +10,7 @@ public class StudentMapper {
         StudentDTO dto = new StudentDTO();
         dto.setId(student.getId());
         dto.setName(student.getName());
-        dto.setClassIds(student.getClasses().stream().map(clazz -> clazz.getId()).collect(Collectors.toSet()));
+        dto.setClassIds(student.getClassStudies().stream().map(clazz -> clazz.getId()).collect(Collectors.toSet()));
         return dto;
     }
 

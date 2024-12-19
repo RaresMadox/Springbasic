@@ -1,9 +1,11 @@
 package com.example.ecom.service;
 
+import com.example.ecom.DTO.StudentClassDTO;
 import com.example.ecom.DTO.StudentDTO;
+import com.example.ecom.mapper.StudentClassMapper;
 import com.example.ecom.mapper.StudentMapper;
 import com.example.ecom.model.Student;
-import com.example.ecom.model.Class;
+import com.example.ecom.model.ClassStudy;
 import com.example.ecom.repository.StudentRepository;
 import com.example.ecom.repository.ClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,13 +55,13 @@ public class StudentService {
     public void addClassToStudent(Long studentId, Long classId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-        Class clazz = classRepository.findById(classId)
+        ClassStudy clazz = classRepository.findById(classId)
                 .orElseThrow(() -> new RuntimeException("Class not found"));
 
         // Avoid ConcurrentModificationException
-        Set<Class> classes = new HashSet<>(student.getClasses());
-        classes.add(clazz); // Add the new class
-        student.setClasses(classes); // Update the student's classes
+        Set<ClassStudy> classStudies = new HashSet<>(student.getClassStudies());
+        classStudies.add(clazz); // Add the new class
+        student.setClassStudies(classStudies); // Update the student's classes
 
         // Ensure bidirectional relationship is maintained
         clazz.getStudents().add(student);
@@ -70,8 +72,16 @@ public class StudentService {
     }
 
     // Get all classes a student is enrolled in
-    public Set<Class> getClassesOfStudent(Long studentId) {
+    public Set<ClassStudy> getClassesOfStudent(Long studentId) {
         Optional<Student> student = studentRepository.findById(studentId);
-        return student.map(Student::getClasses).orElse(new HashSet<>());
+        return student.map(Student::getClassStudies).orElse(new HashSet<>());
+    }
+
+    public List<StudentClassDTO> getAllClasses(Long id) {
+        Optional<Student> student = studentRepository.findById(id);
+
+        return student.stream().map(StudentClassMapper::toDTO).toList();
+
+
     }
 }

@@ -1,7 +1,8 @@
 package com.example.ecom.controller;
 
+import com.example.ecom.DTO.StudentClassDTO;
 import com.example.ecom.DTO.StudentDTO;
-import com.example.ecom.model.Class;
+import com.example.ecom.model.ClassStudy;
 import com.example.ecom.service.StudentService;
 import com.example.ecom.service.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,16 @@ public class StudentController {
 
     // Get all classes for a student
     @GetMapping("/{id}/classes")
-    public Set<Class> getClassesOfStudent(@PathVariable Long id) {
+    public Set<ClassStudy> getClassesOfStudent(@PathVariable Long id) {
         return studentService.getClassesOfStudent(id);
     }
+
+    @GetMapping("/{id}/studentClass")
+    public List<StudentClassDTO> getAllClasses(@PathVariable Long id)
+    {
+        return studentService.getAllClasses(id);
+    }
+
 }
+
+

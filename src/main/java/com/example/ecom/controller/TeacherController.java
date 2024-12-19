@@ -37,5 +37,4 @@ public class TeacherController {
         return ResponseEntity.status(201).body(createdTeacher);
     }
 
-
 }
